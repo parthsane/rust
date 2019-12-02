@@ -1695,7 +1695,8 @@ extern "C" {
                                        TrapUnreachable: bool,
                                        Singlethread: bool,
                                        AsmComments: bool,
-                                       EmitStackSizeSection: bool)
+                                       EmitStackSizeSection: bool,
+                                       LinkerIsLLD: bool)
                                        -> Option<&'static mut TargetMachine>;
     pub fn LLVMRustDisposeTargetMachine(T: &'static mut TargetMachine);
     pub fn LLVMRustAddAnalysisPasses(T: &'a TargetMachine, PM: &PassManager<'a>, M: &'a Module);

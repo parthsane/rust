@@ -10,6 +10,7 @@ use crate::type_::Type;
 use crate::context::{is_pie_binary, get_reloc_model};
 use crate::common;
 use crate::LlvmCodegenBackend;
+use crate::rustc_target::spec::LinkerFlavor;
 use rustc::hir::def_id::LOCAL_CRATE;
 use rustc_codegen_ssa::back::write::{CodegenContext, ModuleConfig, run_assembler};
 use rustc_codegen_ssa::traits::*;
@@ -167,7 +168,10 @@ pub fn target_machine_factory(sess: &Session, optlvl: config::OptLevel, find_fea
     let emit_stack_size_section = sess.opts.debugging_opts.emit_stack_sizes;
 
     let asm_comments = sess.asm_comments();
-
+    let linker_is_lld = match sess.target.target.linker_flavor {
+        LinkerFlavor::Lld(_) => true,
+        _ => false
+    };
     Arc::new(move || {
         let tm = unsafe {
             llvm::LLVMRustCreateTargetMachine(
@@ -183,6 +187,7 @@ pub fn target_machine_factory(sess: &Session, optlvl: config::OptLevel, find_fea
                 singlethread,
                 asm_comments,
                 emit_stack_size_section,
+                linker_is_lld,
             )
         };
 

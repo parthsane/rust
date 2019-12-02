@@ -397,11 +397,6 @@ impl<'a> Linker for GccLinker<'a> {
     }
 
     fn export_symbols(&mut self, tmpdir: &Path, crate_type: CrateType) {
-        // Symbol visibility in object files typically takes care of this.
-        if crate_type == CrateType::Executable {
-            return;
-        }
-
         // We manually create a list of exported symbols to ensure we don't expose any more.
         // The object files have far more public symbols than we actually want to export,
         // so we hide them all here.
